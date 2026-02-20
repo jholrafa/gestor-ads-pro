@@ -8,7 +8,7 @@ st.set_page_config(page_title="Gestor Ads Pro Elite", page_icon="🚀", layout="
 st.title("🚀 Máquina de Campanhas e Tráfego Pago")
 st.markdown("""
 **Transforme seu produto em uma campanha pronta em segundos.**
-*Copywriter + Gestor de Tráfego: Textos milimétricos e configurações exatas (Públicos, Dispositivos e Estratégia).*
+*Copywriter + Gestor de Tráfego: Textos milimétricos e configurações exatas (Google, Facebook ou TikTok).*
 """)
 
 # ================= BARRA LATERAL (CONFIGURAÇÃO) =================
@@ -65,55 +65,71 @@ if submit_btn:
             else:
                 regra_black = "- Nicho White: Foque nos beneficios diretos e transformacao clara."
 
-            # REGRA ESPECÍFICA PARA FACEBOOK ADS COM A ESTRUTURA DO PAPAI
+            # === O CÉREBRO INTELIGENTE: SEPARA GOOGLE DE FACEBOOK ===
+            regras_textos = ""
             estrutura_trafego = ""
-            if "Facebook" in plataforma:
+            
+            if "Google" in plataforma:
+                regras_textos = """
+                1. 15 Titulos (MAXIMO 30 CARACTERES cada).
+                2. 4 Descricoes (MAXIMO 90 CARACTERES cada).
+                3. 6 Sitelinks curtos (MAXIMO 25 CARACTERES cada).
+                4. 4 Frases de Destaque / Snippets Estruturados.
+                5. 
+                """
                 estrutura_trafego = """
                 =========================================
-                2. PASSO A PASSO DA CAMPANHA (O MAPA DA MINA)
+                🎯 2. CONFIGURACAO DA CAMPANHA (O MAPA DA MINA - GOOGLE ADS)
                 =========================================
-                (Entregue EXATAMENTE esta estrutura de configuracao para o cliente preencher no Facebook, adicionando dicas rapidas relacionadas ao produto dele):
+                - Objetivo da Campanha: (Ex: Vendas, Leads)
+                - Palavras-chave Positivas: (10 termos quentes para comprar)
+                - Palavras-chave Negativas: (10 termos cruciais para negativar e nao perder dinheiro)
+                - Publico-Alvo Demografico: (Qual a Renda, Idade e Genero ideal?)
+                - Dispositivos: (Focar em Celular, Computador ou ambos?)
+                - Estrategia de Lance Recomendada: (Ex: Maximizar Conversoes)
+                """
                 
+            elif "Facebook" in plataforma:
+                regras_textos = """
+                1. Headline do Anuncio (Titulo Curto).
+                2. Copy Principal Persuasiva (Texto longo para o corpo do anuncio).
+                """
+                estrutura_trafego = """
+                =========================================
+                🎯 2. CONFIGURACAO DA CAMPANHA (O MAPA DA MINA - FACEBOOK ADS)
+                =========================================
                 NIVEL 1: CAMPANHA
                 - Tipo de Compra: Leilao
                 - Objetivo da Campanha: Vendas
                 - Orcamento de Campanha Advantage+ (CBO): Ativado
                 - Estrategia de Orcamento: Volume mais alto
-                - Orcamento Diario Sugerido: R$ 25,00 (Para teste inicial)
+                - Orcamento Diario Sugerido: R$ 25,00
                 
                 NIVEL 2: CONJUNTO DE ANUNCIOS
                 - Meta de Desempenho: Maximizar numero de conversoes
-                - Pixel / Evento: Selecione seu Pixel -> Evento: Iniciar Finalizacao de Compra (Initiate Checkout)
+                - Pixel / Evento: Selecionar o Pixel -> Evento: Iniciar Finalizacao de Compra (Initiate Checkout)
                 - Publico Advantage+: Ativado
                 - Localizacao: Inclusao - Brasil
-                - Segmentacao: (Sugira 1 ou 2 direcionamentos focados no publico-alvo, ex: excluir compradores dos ultimos 90 dias)
-                - Posicionamentos: Advantage+ Ativado (Deixe a Meta escolher onde performa melhor)
+                - Segmentacao: (Sugira interesses e exclusoes, ex: excluir compradores 90 dias)
+                - Posicionamentos: Advantage+ Ativado
                 
                 NIVEL 3: ANUNCIO
-                - Nome do Anuncio: (Crie um nome baseado no angulo)
-                - Formato: (Sugira imagem ou video)
-                - Rastreamento: Eventos do Site ativados
-                - Parametros de URL (UTM): (Crie um exemplo de UTM basico para este anuncio)
+                - Nome do Anuncio: (Crie um nome focado no angulo)
+                - Rastreamento: Eventos do Site Ativados
+                - Parametros de URL (UTM): (Crie o link com utm_source e utm_medium)
                 """
-            else:
-                estrutura_trafego = """
-                =========================================
-                2. CONFIGURACAO DA CAMPANHA (O SEGREDO)
-                =========================================
-                - Objetivo da Campanha Recomendado:
-                - Palavras-chave ou Interesses: (10 termos fortes)
-                - Dispositivos: 
-                - Estrategia de Lance Recomendada: 
-                - Extensoes adicionais:
-                """
+                
+            else: # TikTok
+                regras_textos = "Ganchos (Hooks) para os 3 primeiros segundos de video e Texto curto para a legenda."
+                estrutura_trafego = "Objetivo, Interesses e Comportamentos ideais no TikTok Ads."
 
             # O PROMPT DE ENGENHARIA 
             prompt_sistema = f"""
             Voce e um Especialista Senior em Trafego Pago e Copywriting.
+            Sua missao e preencher as configuracoes tecnicas e escrever copys matadoras.
             
             REGRAS DE OURO PARA TEXTOS:
-            - Google Ads: Titulos MAX 30 CARACTERES. Descricoes MAX 90 CARACTERES. Sitelinks MAX 25.
-            - Facebook/TikTok: Foque em ganchos e headlines blindadas.
+            - Respeite rigorosamente as limitacoes de caracteres quando for Google Ads.
             - NAO use aspas nas respostas.
             
             {regra_black}
@@ -131,20 +147,20 @@ if submit_btn:
             SAIDA OBRIGATORIA NESTE FORMATO EXATO:
             
             =========================================
-            1. TEXTOS DO ANUNCIO (COPY)
+            📝 1. TEXTOS DO ANUNCIO (COPY)
             =========================================
-            (Escreva a copy respeitando rigorosamente os limites de caracteres e as regras da plataforma)
+            {regras_textos}
             
             {estrutura_trafego}
             
             =========================================
-            3. ANALISE DO PUBLICO E ANGULO
+            👥 3. ANALISE DO PUBLICO E ANGULO
             =========================================
             - Qual a principal dor desse publico?
-            - Qual a objecao que precisa ser quebrada na pagina de vendas?
+            - Qual a objecao principal a ser quebrada na pagina de vendas?
             """
 
-            with st.spinner("🤖 O Cérebro Tubarão está montando seu curso e campanha..."):
+            with st.spinner(f"🤖 O Cérebro Tubarão está montando a estrutura de {plataforma}..."):
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
@@ -156,7 +172,8 @@ if submit_btn:
                 
                 resultado = response.choices[0].message.content
                 
-                st.success("✅ Guia de Tráfego e Copy Gerados com Sucesso!")
+                # Exibição Bonita
+                st.success(f"✅ Guia Completo para {plataforma} Gerado com Sucesso!")
                 st.text_area("Copie sua Estrutura Completa Aqui:", value=resultado, height=650)
                 
         except Exception as e:
