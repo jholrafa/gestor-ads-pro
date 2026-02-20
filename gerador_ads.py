@@ -5,7 +5,6 @@ from openai import OpenAI
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(page_title="Gestor Ads Pro Elite", page_icon="🚀", layout="wide")
 
-# Título e Subtítulo
 st.title("🚀 Máquina de Campanhas e Tráfego Pago")
 st.markdown("""
 **Transforme seu produto em uma campanha pronta em segundos.**
@@ -15,7 +14,11 @@ st.markdown("""
 # ================= BARRA LATERAL (CONFIGURAÇÃO) =================
 with st.sidebar:
     st.header("🔑 Configuração")
-    api_key = st.text_input("Cole sua API Key da OpenAI aqui:", type="password")
+    chave_crua = st.text_input("Cole sua API Key da OpenAI aqui:", type="password")
+    
+    # Limpa espaços invisíveis que causam erro na chave
+    api_key = chave_crua.strip() if chave_crua else ""
+    
     st.markdown("---")
     st.info("💡 Dica: Para vender isso, você esconderia essa chave e cobraria assinatura do cliente.")
 
@@ -47,70 +50,101 @@ if submit_btn:
     elif not nome_produto or not beneficios:
         st.warning("⚠️ Preencha pelo menos o Nome e os Benefícios!")
     else:
-        client = OpenAI(api_key=api_key)
-        
-        # INSTRUÇÕES DE CONTINGÊNCIA (NICHO BLACK) - Sem Emojis para não dar erro de ASCII
-        regra_black = ""
-        if tipo_nicho == "Nicho Black (Risco de Bloqueio)":
-            regra_black = """
-            ALERTA DE NICHO BLACK (CONTINGENCIA ATIVADA):
-            - O rigor com as politicas da plataforma e MAXIMO.
-            - PROIBIDO usar palavras que dao ban/bloqueio (ex: "rapido", "garantido", "dinheiro facil", "cura", "perder peso", "fique rico").
-            - Use COPY BLINDADA: Trabalhe com curiosidade, metaforas, e foque no "mecanismo unico" ao inves da promessa agressiva.
-            - O texto precisa passar pela aprovacao automatica do robo da plataforma sem levantar suspeitas (zero claims exagerados).
+        try:
+            client = OpenAI(api_key=api_key)
+            
+            # INSTRUÇÕES DE CONTINGÊNCIA
+            regra_black = ""
+            if "Black" in tipo_nicho:
+                regra_black = """
+                ALERTA DE NICHO BLACK:
+                - Rigor maximo com as politicas da plataforma.
+                - PROIBIDO usar palavras que dao bloqueio ("rapido", "garantido", "dinheiro facil", "cura", "perder peso").
+                - Trabalhe com curiosidade e metaforas. Zero claims exagerados.
+                """
+            else:
+                regra_black = "- Nicho White: Foque nos beneficios diretos e transformacao clara."
+
+            # REGRA ESPECÍFICA PARA FACEBOOK ADS COM A ESTRUTURA DO PAPAI
+            estrutura_trafego = ""
+            if "Facebook" in plataforma:
+                estrutura_trafego = """
+                =========================================
+                2. PASSO A PASSO DA CAMPANHA (O MAPA DA MINA)
+                =========================================
+                (Entregue EXATAMENTE esta estrutura de configuracao para o cliente preencher no Facebook, adicionando dicas rapidas relacionadas ao produto dele):
+                
+                NIVEL 1: CAMPANHA
+                - Tipo de Compra: Leilao
+                - Objetivo da Campanha: Vendas
+                - Orcamento de Campanha Advantage+ (CBO): Ativado
+                - Estrategia de Orcamento: Volume mais alto
+                - Orcamento Diario Sugerido: R$ 25,00 (Para teste inicial)
+                
+                NIVEL 2: CONJUNTO DE ANUNCIOS
+                - Meta de Desempenho: Maximizar numero de conversoes
+                - Pixel / Evento: Selecione seu Pixel -> Evento: Iniciar Finalizacao de Compra (Initiate Checkout)
+                - Publico Advantage+: Ativado
+                - Localizacao: Inclusao - Brasil
+                - Segmentacao: (Sugira 1 ou 2 direcionamentos focados no publico-alvo, ex: excluir compradores dos ultimos 90 dias)
+                - Posicionamentos: Advantage+ Ativado (Deixe a Meta escolher onde performa melhor)
+                
+                NIVEL 3: ANUNCIO
+                - Nome do Anuncio: (Crie um nome baseado no angulo)
+                - Formato: (Sugira imagem ou video)
+                - Rastreamento: Eventos do Site ativados
+                - Parametros de URL (UTM): (Crie um exemplo de UTM basico para este anuncio)
+                """
+            else:
+                estrutura_trafego = """
+                =========================================
+                2. CONFIGURACAO DA CAMPANHA (O SEGREDO)
+                =========================================
+                - Objetivo da Campanha Recomendado:
+                - Palavras-chave ou Interesses: (10 termos fortes)
+                - Dispositivos: 
+                - Estrategia de Lance Recomendada: 
+                - Extensoes adicionais:
+                """
+
+            # O PROMPT DE ENGENHARIA 
+            prompt_sistema = f"""
+            Voce e um Especialista Senior em Trafego Pago e Copywriting.
+            
+            REGRAS DE OURO PARA TEXTOS:
+            - Google Ads: Titulos MAX 30 CARACTERES. Descricoes MAX 90 CARACTERES. Sitelinks MAX 25.
+            - Facebook/TikTok: Foque em ganchos e headlines blindadas.
+            - NAO use aspas nas respostas.
+            
+            {regra_black}
             """
-        else:
-            regra_black = "- Nicho White: Foque nos beneficios diretos e transformacao clara, mantendo as boas praticas da plataforma."
+            
+            prompt_usuario = f"""
+            Crie a estrutura da campanha para:
+            Plataforma: {plataforma}
+            Nicho: {tipo_nicho}
+            Produto: {nome_produto}
+            URL: {url_site}
+            Publico: {publico_alvo}
+            Beneficios: {beneficios}
+            
+            SAIDA OBRIGATORIA NESTE FORMATO EXATO:
+            
+            =========================================
+            1. TEXTOS DO ANUNCIO (COPY)
+            =========================================
+            (Escreva a copy respeitando rigorosamente os limites de caracteres e as regras da plataforma)
+            
+            {estrutura_trafego}
+            
+            =========================================
+            3. ANALISE DO PUBLICO E ANGULO
+            =========================================
+            - Qual a principal dor desse publico?
+            - Qual a objecao que precisa ser quebrada na pagina de vendas?
+            """
 
-        # O PROMPT DE ENGENHARIA (O Segredo do App)
-        prompt_sistema = f"""
-        Voce e um Especialista Senior em Trafego Pago e Copywriting (Nivel Gestor Elite).
-        Sua missao e criar a estrutura de textos de alta conversao E o passo a passo de configuracao da campanha na plataforma escolhida.
-        
-        REGRAS DE OURO PARA TEXTOS:
-        - Se for Google Ads: Titulos MAXIMO 30 CARACTERES. Descricoes MAXIMO 90 CARACTERES. Sitelinks Max 25 caracteres. (Conte cada letra e espaco. Se passar, voce falha).
-        - Se for Facebook/Insta: Crie a Copy Principal (Headline forte, corpo persuasivo) e Titulo do Anuncio.
-        - Se for TikTok: Foque em ganchos (hooks) rapidos para os primeiros 3 segundos de video.
-        - NAO use aspas nas respostas.
-        
-        {regra_black}
-        """
-        
-        prompt_usuario = f"""
-        Crie uma estrutura completa de campanha para:
-        Plataforma: {plataforma}
-        Tipo de Nicho: {tipo_nicho}
-        Produto: {nome_produto}
-        URL: {url_site}
-        Publico: {publico_alvo}
-        Beneficios: {beneficios}
-        
-        SAIDA OBRIGATORIA NESTE FORMATO EXATO:
-        
-        =========================================
-        1. TEXTOS DO ANUNCIO (COPY)
-        =========================================
-        (Se Google: 15 Titulos de 30 chars, 4 Descricoes de 90 chars e 6 Sitelinks curtos)
-        (Se Face/TikTok: Textos Principais/Ganchos e Titulos blindados)
-        
-        =========================================
-        2. CONFIGURACAO DA CAMPANHA (O SEGREDO)
-        =========================================
-        - Objetivo da Campanha Recomendado:
-        - Palavras-chave ou Interesses: (10 termos fortes)
-        - Dispositivos: 
-        - Estrategia de Lance Recomendada: 
-        - Extensoes adicionais (Snippets, etc):
-        
-        =========================================
-        3. ANALISE DO PUBLICO E ANGULO
-        =========================================
-        - Qual a principal dor desse publico?
-        - Qual a objecao que precisa ser quebrada na pagina de vendas?
-        """
-
-        with st.spinner(f"O Cerebro Tubarao esta montando sua campanha de {plataforma}..."):
-            try:
+            with st.spinner("🤖 O Cérebro Tubarão está montando seu curso e campanha..."):
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
@@ -122,12 +156,11 @@ if submit_btn:
                 
                 resultado = response.choices[0].message.content
                 
-                # Exibição Bonita
-                st.success(f"✅ Campanha de {plataforma} ({tipo_nicho}) Gerada com Sucesso!")
-                st.text_area("Copie sua Campanha e Estrutura Aqui:", value=resultado, height=600)
+                st.success("✅ Guia de Tráfego e Copy Gerados com Sucesso!")
+                st.text_area("Copie sua Estrutura Completa Aqui:", value=resultado, height=650)
                 
-            except Exception as e:
-                st.error(f"Erro ao conectar na IA: {e}")
+        except Exception as e:
+            st.error(f"Erro ao conectar na IA (Verifique sua chave): {e}")
 
 # ================= RODAPÉ =================
 st.markdown("---")
