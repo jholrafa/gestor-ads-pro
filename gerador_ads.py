@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 from openai import OpenAI
 
@@ -48,29 +49,29 @@ if submit_btn:
     else:
         client = OpenAI(api_key=api_key)
         
-        # INSTRUÇÕES DE CONTINGÊNCIA (NICHO BLACK)
+        # INSTRUÇÕES DE CONTINGÊNCIA (NICHO BLACK) - Sem Emojis para não dar erro de ASCII
         regra_black = ""
         if tipo_nicho == "Nicho Black (Risco de Bloqueio)":
             regra_black = """
-            🚨 ALERTA DE NICHO BLACK (CONTINGÊNCIA ATIVADA):
-            - O rigor com as políticas da plataforma é MÁXIMO.
-            - PROIBIDO usar palavras que dão ban/bloqueio (ex: "rápido", "garantido", "dinheiro fácil", "cura", "perder peso", "fique rico").
-            - Use COPY BLINDADA: Trabalhe com curiosidade, metáforas, e foque no "mecanismo único" ao invés da promessa agressiva.
-            - O texto precisa passar pela aprovação automática do robô da plataforma sem levantar suspeitas (zero claims exagerados).
+            ALERTA DE NICHO BLACK (CONTINGENCIA ATIVADA):
+            - O rigor com as politicas da plataforma e MAXIMO.
+            - PROIBIDO usar palavras que dao ban/bloqueio (ex: "rapido", "garantido", "dinheiro facil", "cura", "perder peso", "fique rico").
+            - Use COPY BLINDADA: Trabalhe com curiosidade, metaforas, e foque no "mecanismo unico" ao inves da promessa agressiva.
+            - O texto precisa passar pela aprovacao automatica do robo da plataforma sem levantar suspeitas (zero claims exagerados).
             """
         else:
-            regra_black = "- Nicho White: Foque nos benefícios diretos e transformação clara, mantendo as boas práticas da plataforma."
+            regra_black = "- Nicho White: Foque nos beneficios diretos e transformacao clara, mantendo as boas praticas da plataforma."
 
         # O PROMPT DE ENGENHARIA (O Segredo do App)
         prompt_sistema = f"""
-        Você é um Especialista Sênior em Tráfego Pago e Copywriting (Nível Gestor Elite).
-        Sua missão é criar a estrutura de textos de alta conversão E o passo a passo de configuração da campanha na plataforma escolhida.
+        Voce e um Especialista Senior em Trafego Pago e Copywriting (Nivel Gestor Elite).
+        Sua missao e criar a estrutura de textos de alta conversao E o passo a passo de configuracao da campanha na plataforma escolhida.
         
         REGRAS DE OURO PARA TEXTOS:
-        - Se for Google Ads: Títulos MÁXIMO 30 CARACTERES. Descrições MÁXIMO 90 CARACTERES. Sitelinks Max 25 caracteres. (Conte cada letra e espaço. Se passar, você falha).
-        - Se for Facebook/Insta: Crie a Copy Principal (Headline forte, corpo persuasivo) e Título do Anúncio.
-        - Se for TikTok: Foque em ganchos (hooks) rápidos para os primeiros 3 segundos de vídeo.
-        - NÃO use aspas nas respostas.
+        - Se for Google Ads: Titulos MAXIMO 30 CARACTERES. Descricoes MAXIMO 90 CARACTERES. Sitelinks Max 25 caracteres. (Conte cada letra e espaco. Se passar, voce falha).
+        - Se for Facebook/Insta: Crie a Copy Principal (Headline forte, corpo persuasivo) e Titulo do Anuncio.
+        - Se for TikTok: Foque em ganchos (hooks) rapidos para os primeiros 3 segundos de video.
+        - NAO use aspas nas respostas.
         
         {regra_black}
         """
@@ -81,34 +82,34 @@ if submit_btn:
         Tipo de Nicho: {tipo_nicho}
         Produto: {nome_produto}
         URL: {url_site}
-        Público: {publico_alvo}
-        Benefícios: {beneficios}
+        Publico: {publico_alvo}
+        Beneficios: {beneficios}
         
-        SAÍDA OBRIGATÓRIA NESTE FORMATO EXATO:
-        
-        =========================================
-        📝 1. TEXTOS DO ANÚNCIO (COPY)
-        =========================================
-        (Se Google: 15 Títulos de 30 chars, 4 Descrições de 90 chars e 6 Sitelinks curtos)
-        (Se Face/TikTok: Textos Principais/Ganchos e Títulos blindados)
+        SAIDA OBRIGATORIA NESTE FORMATO EXATO:
         
         =========================================
-        🎯 2. CONFIGURAÇÃO DA CAMPANHA (O SEGREDO)
+        1. TEXTOS DO ANUNCIO (COPY)
+        =========================================
+        (Se Google: 15 Titulos de 30 chars, 4 Descricoes de 90 chars e 6 Sitelinks curtos)
+        (Se Face/TikTok: Textos Principais/Ganchos e Titulos blindados)
+        
+        =========================================
+        2. CONFIGURACAO DA CAMPANHA (O SEGREDO)
         =========================================
         - Objetivo da Campanha Recomendado:
         - Palavras-chave ou Interesses: (10 termos fortes)
         - Dispositivos: 
-        - Estratégia de Lance Recomendada: 
-        - Extensões adicionais (Snippets, etc):
+        - Estrategia de Lance Recomendada: 
+        - Extensoes adicionais (Snippets, etc):
         
         =========================================
-        👥 3. ANÁLISE DO PÚBLICO E ÂNGULO
+        3. ANALISE DO PUBLICO E ANGULO
         =========================================
-        - Qual a principal dor desse público?
-        - Qual a objeção que precisa ser quebrada na página de vendas?
+        - Qual a principal dor desse publico?
+        - Qual a objecao que precisa ser quebrada na pagina de vendas?
         """
 
-        with st.spinner(f"🤖 O Cérebro Tubarão está montando sua campanha Blindada de {plataforma}..."):
+        with st.spinner(f"O Cerebro Tubarao esta montando sua campanha de {plataforma}..."):
             try:
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
