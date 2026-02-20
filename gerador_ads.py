@@ -1,94 +1,116 @@
 import streamlit as st
 from openai import OpenAI
 
-# 1. CONFIGURAÇÃO DA PÁGINA (Deixa a tela larga e coloca o ícone da águia na aba do navegador)
-st.set_page_config(page_title="Gestor Ads Elite", page_icon="🦅", layout="wide")
+# ================= CONFIGURAÇÃO DA PÁGINA =================
+st.set_page_config(page_title="Gestor Ads Pro Elite", page_icon="🚀", layout="wide")
 
-# 2. BARRA LATERAL (Área do Cliente e API)
+# Título e Subtítulo
+st.title("🚀 Máquina de Campanhas e Tráfego Pago")
+st.markdown("""
+**Transforme seu produto em uma campanha pronta em segundos.**
+*Copywriter + Gestor de Tráfego: Textos milimétricos e configurações exatas (Públicos, Dispositivos e Estratégia).*
+""")
+
+# ================= BARRA LATERAL (CONFIGURAÇÃO) =================
 with st.sidebar:
-    st.title("🦅 Gestor Ads Elite")
+    st.header("🔑 Configuração")
+    api_key = st.text_input("Cole sua API Key da OpenAI aqui:", type="password")
     st.markdown("---")
-    api_key = st.text_input("🔑 Sua Chave API (OpenAI):", type="password", help="Sua chave é segura e não é salva no nosso banco de dados.")
+    st.info("💡 Dica: Para vender isso, você esconderia essa chave e cobraria assinatura do cliente.")
+
+# ================= FORMULÁRIO DO USUÁRIO =================
+with st.form("form_ads"):
+    col1, col2, col3 = st.columns(3)
     
-    if api_key:
-        st.success("✅ Sistema Conectado e Pronto!")
-    else:
-        st.warning("⚠️ Insira sua chave para liberar o motor.")
-        
-    st.markdown("---")
-    st.info("💡 Dica do Tubarão: Quanto mais detalhes você colocar no público-alvo, mais a Inteligência Artificial vai acertar na dor do cliente!")
+    with col1:
+        plataforma = st.selectbox("Qual a Plataforma?", ["Google Ads (Pesquisa)", "Facebook Ads / Instagram", "TikTok Ads"])
+    with col2:
+        nome_produto = st.text_input("Nome do Produto/Serviço", placeholder="Ex: Robô V21 Forex")
+    with col3:
+        url_site = st.text_input("Site (URL)", placeholder="Ex: www.robov21.com.br")
+    
+    col4, col5 = st.columns(2)
+    with col4:
+        publico_alvo = st.text_input("Público Alvo (Quem compra?)", placeholder="Ex: Investidores iniciantes que querem renda extra")
+    with col5:
+        beneficios = st.text_area("Principais Benefícios (Ouro)", placeholder="Ex: Automático, Risco Baixo, Instalação Fácil...", height=68)
+    
+    # Botão de Ação
+    submit_btn = st.form_submit_button("🔥 GERAR CAMPANHA COMPLETA AGORA", use_container_width=True)
 
-# 3. CABEÇALHO PRINCIPAL
-st.title("🚀 Painel de Criação de Campanhas")
-st.markdown("Gere **anúncios de alta conversão** em segundos sem precisar de um copywriter.")
-st.markdown("---")
-
-# 4. DASHBOARD - COLUNAS LADO A LADO
-col1, col2 = st.columns(2)
-
-with col1:
-    nicho = st.text_input("🎯 Produto ou Nicho", placeholder="Ex: Emagrecimento, Opções Binárias, Hamburgueria...")
-
-with col2:
-    publico = st.text_input("👥 Público-Alvo", placeholder="Ex: Homens 25-40 anos que querem renda extra...")
-
-# 5. CONFIGURAÇÕES AVANÇADAS (Fica escondidinho para dar um ar profissional)
-with st.expander("⚙️ Configurações Avançadas da Campanha"):
-    col_adv1, col_adv2 = st.columns(2)
-    with col_adv1:
-        tom_voz = st.selectbox("Tom de Voz do Anúncio:", ["Persuasivo & Agressivo (Venda Direta)", "Educativo & Autoridade", "Urgência & Escassez", "Curiosidade Extrema"])
-    with col_adv2:
-        plataforma = st.selectbox("Foco da Plataforma:", ["Google Ads (Rede de Pesquisa)", "Meta Ads (Facebook/Instagram)", "TikTok Ads", "YouTube Ads"])
-
-st.markdown("<br>", unsafe_allow_html=True) # Dá um espacinho
-
-# 6. O BOTÃO DE AÇÃO PRINCIPAL
-if st.button("⚡ GERAR ANÚNCIO BLINDADO", use_container_width=True, type="primary"):
+# ================= A MÁGICA (INTELIGÊNCIA ARTIFICIAL) =================
+if submit_btn:
     if not api_key:
-        st.error("🛑 Alto lá! Cole sua Chave API na barra lateral esquerda primeiro.")
-    elif not nicho or not publico:
-        st.warning("⚠️ Preencha o Nicho e o Público para o robô trabalhar direito.")
+        st.error("⚠️ Você precisa colocar a API Key da OpenAI na barra lateral para funcionar!")
+    elif not nome_produto or not beneficios:
+        st.warning("⚠️ Preencha pelo menos o Nome e os Benefícios!")
     else:
-        with st.spinner("🧠 O Cérebro do Tubarão está analisando o mercado e escrevendo sua copy..."):
+        client = OpenAI(api_key=api_key)
+        
+        # O PROMPT DE ENGENHARIA (O Segredo do App - Agora com Tráfego Completo)
+        prompt_sistema = """
+        Você é um Especialista Sênior em Tráfego Pago e Copywriting (Nível Gestor Elite).
+        Sua missão é criar a estrutura de textos de alta conversão E o passo a passo de configuração da campanha na plataforma escolhida, agindo como um professor de tráfego.
+        
+        REGRAS DE OURO PARA TEXTOS:
+        - Se for Google Ads: Títulos MÁXIMO 30 CARACTERES. Descrições MÁXIMO 90 CARACTERES. Sitelinks Max 25 caracteres. (Conte cada letra e espaço. Se passar, você falha).
+        - Se for Facebook/Insta: Crie a Copy Principal (Headline forte, corpo persuasivo) e Título do Anúncio.
+        - Se for TikTok: Foque em ganchos (hooks) rápidos para os primeiros 3 segundos de vídeo.
+        - Use Gatilhos Mentais: Urgência, Autoridade, Ganância.
+        - NÃO use aspas nas respostas.
+        """
+        
+        prompt_usuario = f"""
+        Crie uma estrutura completa de campanha para:
+        Plataforma: {plataforma}
+        Produto: {nome_produto}
+        URL: {url_site}
+        Público: {publico_alvo}
+        Benefícios: {beneficios}
+        
+        SAÍDA OBRIGATÓRIA NESTE FORMATO EXATO (Adapte os textos para a plataforma escolhida):
+        
+        =========================================
+        📝 1. TEXTOS DO ANÚNCIO (COPY)
+        =========================================
+        (Aqui entram os 15 Títulos de 30 chars, 4 Descrições de 90 chars e Sitelinks para Google, OU os Textos Principais/Títulos para Face/TikTok)
+        
+        =========================================
+        🎯 2. CONFIGURAÇÃO DA CAMPANHA (O SEGREDO)
+        =========================================
+        - Objetivo da Campanha Recomendado: (Ex: Vendas, Leads, Tráfego)
+        - Palavras-chave ou Interesses: (Liste 10 termos fortes para segmentar)
+        - Dispositivos: (Recomendação de focar só em Celular, PC, ou ambos, e por quê)
+        - Estratégia de Lance Recomendada: (Ex: Maximizar Conversões, CPA Desejado)
+        - Extensões adicionais (Snippets, Frases de destaque, etc.)
+        
+        =========================================
+        👥 3. ANÁLISE DO PÚBLICO E ÂNGULO
+        =========================================
+        - Qual a principal dor desse público?
+        - Qual a objeção que precisa ser quebrada na página de vendas?
+        """
+
+        with st.spinner(f"🤖 O Cérebro Tubarão está montando sua campanha de {plataforma}..."):
             try:
-                # Conecta na OpenAI
-                client = OpenAI(api_key=api_key)
-                
-                # A INSTRUÇÃO SECRETA DO PAPAI (O PROMPT)
-                prompt = f"""
-                Atue como o melhor copywriter de tráfego pago do mundo.
-                Crie um anúncio para a plataforma {plataforma}.
-                Nicho/Produto: {nicho}.
-                Público-alvo: {publico}.
-                Tom de voz: {tom_voz}.
-                
-                Me entregue o resultado dividido em 3 partes:
-                1. 3 Opções de Títulos Magnéticos.
-                2. A Copy Principal (Corpo do texto).
-                3. Uma sugestão de Imagem ou Vídeo para usar nesse anúncio.
-                """
-                
-                # Chama o robô da OpenAI
-                resposta = client.chat.completions.create(
-                    model="gpt-3.5-turbo", # Pode mudar pra gpt-4 se quiser mais inteligência
-                    messages=[{"role": "user", "content": prompt}]
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini", # Modelo rápido e barato
+                    messages=[
+                        {"role": "system", "content": prompt_sistema},
+                        {"role": "user", "content": prompt_usuario}
+                    ],
+                    temperature=0.7
                 )
                 
-                texto_gerado = resposta.choices[0].message.content
+                resultado = response.choices[0].message.content
                 
-                st.success("🎯 Campanha Gerada com Sucesso!")
-                
-                # 7. EXIBIÇÃO EM ABAS (Chique demais!)
-                st.markdown("### 🏆 Resultado da Sua Campanha")
-                st.info(texto_gerado)
-                
-                # 8. BOTÃO DE DOWNLOAD PARA O CLIENTE LEVAR O ARQUIVO
-                st.download_button(
-                    label="💾 Baixar Campanha em Texto",
-                    data=texto_gerado,
-                    file_name="campanha_blindada.txt",
-                    mime="text/plain"
-                )
+                # Exibição Bonita
+                st.success(f"✅ Campanha de {plataforma} Gerada com Sucesso!")
+                st.text_area("Copie sua Campanha e Estrutura Aqui:", value=resultado, height=600)
                 
             except Exception as e:
-                st.error(f"❌ Deu algum erro de comunicação com a OpenAI. Verifique sua chave API. Detalhe técnico: {e}")
+                st.error(f"Erro ao conectar na IA: {e}")
+
+# ================= RODAPÉ =================
+st.markdown("---")
+st.caption("Desenvolvido por Papai & Parceiro Ltda. 🦅")
