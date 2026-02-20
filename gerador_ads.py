@@ -2,15 +2,25 @@
 import streamlit as st
 from openai import OpenAI
 
+# ================= CONFIGURAÇÃO DA PÁGINA =================
+st.set_page_config(page_title="Gestor Ads Pro Elite", page_icon="🚀", layout="wide")
+
+# ================= 🛡️ ESCUDO ANTI-TRADUTOR (BLINDA O SITE CONTRA ERROS DO CHROME) =================
+st.markdown("""
+    <meta name="google" content="notranslate">
+    <style>
+        /* Bloqueia a ação do tradutor automático que quebra os botões do sistema */
+        .skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+    </style>
+""", unsafe_allow_html=True)
+
 # ================= 📋 BANCO DE DADOS DO PAPAI =================
 CLIENTES_AUTORIZADOS = {
     "PAPAI-ADMIN-001": "Dono do Sistema",
     "TESTE-GRATIS-123": "Cliente Teste",
     "CLIENTE-VIP-777": "João do Tráfego"
 }
-
-# ================= CONFIGURAÇÃO DA PÁGINA =================
-st.set_page_config(page_title="Gestor Ads Pro Elite", page_icon="🚀", layout="wide")
 
 # ================= 🔐 SISTEMA DE LOGIN (A CATRACA) =================
 if "autenticado" not in st.session_state:
