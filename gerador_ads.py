@@ -75,18 +75,17 @@ if submit_btn:
                 2. 4 Descricoes (MAXIMO 90 CARACTERES cada).
                 3. 6 Sitelinks curtos (MAXIMO 25 CARACTERES cada).
                 4. 4 Frases de Destaque / Snippets Estruturados.
-                5. 
                 """
                 estrutura_trafego = """
                 =========================================
                 🎯 2. CONFIGURACAO DA CAMPANHA (O MAPA DA MINA - GOOGLE ADS)
                 =========================================
-                - Objetivo da Campanha: (Ex: Vendas, Leads)
+                - Objetivo da Campanha: VENDAS (Foque sempre em Vendas/Conversao)
                 - Palavras-chave Positivas: (10 termos quentes para comprar)
                 - Palavras-chave Negativas: (10 termos cruciais para negativar e nao perder dinheiro)
                 - Publico-Alvo Demografico: (Qual a Renda, Idade e Genero ideal?)
                 - Dispositivos: (Focar em Celular, Computador ou ambos?)
-                - Estrategia de Lance Recomendada: (Ex: Maximizar Conversoes)
+                - Estrategia de Lance Recomendada: Maximizar Conversoes
                 """
                 
             elif "Facebook" in plataforma:
@@ -121,12 +120,12 @@ if submit_btn:
                 
             else: # TikTok
                 regras_textos = "Ganchos (Hooks) para os 3 primeiros segundos de video e Texto curto para a legenda."
-                estrutura_trafego = "Objetivo, Interesses e Comportamentos ideais no TikTok Ads."
+                estrutura_trafego = "Objetivo (Sempre focado em Conversoes/Vendas), Interesses e Comportamentos ideais no TikTok Ads."
 
             # O PROMPT DE ENGENHARIA 
             prompt_sistema = f"""
             Voce e um Especialista Senior em Trafego Pago e Copywriting.
-            Sua missao e preencher as configuracoes tecnicas e escrever copys matadoras.
+            Sua missao e preencher as configuracoes tecnicas e escrever copys matadoras focadas em conversao.
             
             REGRAS DE OURO PARA TEXTOS:
             - Respeite rigorosamente as limitacoes de caracteres quando for Google Ads.
