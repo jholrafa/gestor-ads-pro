@@ -2,25 +2,61 @@
 import streamlit as st
 from openai import OpenAI
 
+# ================= 📋 BANCO DE DADOS DO PAPAI =================
+CLIENTES_AUTORIZADOS = {
+    "PAPAI-ADMIN-001": "Dono do Sistema",
+    "TESTE-GRATIS-123": "Cliente Teste",
+    "CLIENTE-VIP-777": "João do Tráfego"
+}
+
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(page_title="Gestor Ads Pro Elite", page_icon="🚀", layout="wide")
+
+# ================= 🔐 SISTEMA DE LOGIN (A CATRACA) =================
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
+
+if not st.session_state.autenticado:
+    st.title("🔒 Acesso Restrito - Gestor Ads Elite")
+    st.markdown("Bem-vindo! Digite sua **Chave VIP** para acessar a máquina de tráfego.")
+    
+    chave_digitada = st.text_input("🔑 Chave de Acesso:", type="password", placeholder="Ex: CLIENTE-VIP-777")
+    
+    if st.button("Entrar no Sistema", type="primary"):
+        chave_limpa = chave_digitada.strip()
+        
+        if chave_limpa in CLIENTES_AUTORIZADOS:
+            st.session_state.autenticado = True
+            st.session_state.nome_cliente = CLIENTES_AUTORIZADOS[chave_limpa]
+            st.rerun() 
+        else:
+            st.error("❌ Chave inválida ou expirada. Fale com o suporte.")
+            
+    st.markdown("---")
+    st.caption("Quer ter acesso? Compre sua licença agora mesmo.")
+    st.stop()
+
+# ================= 🚀 O ROBÔ LIBERADO =================
+with st.sidebar:
+    st.success(f"👤 Bem-vindo, **{st.session_state.nome_cliente}**!")
+    if st.button("Sair (Logout)"):
+        st.session_state.autenticado = False
+        st.rerun()
+    st.markdown("---")
+    st.info("🟢 Sistema Conectado e Blindado. Motor IA 100% Operacional.")
 
 st.title("🚀 Máquina de Campanhas e Tráfego Pago")
 st.markdown("""
 **Transforme seu produto em uma campanha pronta em segundos.**
-*Copywriter + Gestor de Tráfego: Textos milimétricos e configurações exatas (Google, Facebook ou TikTok).*
+*Copywriter + Gestor de Tráfego: Textos milimétricos e configurações exatas.*
 """)
 
-# ================= BARRA LATERAL (CONFIGURAÇÃO) =================
-with st.sidebar:
-    st.header("🔑 Configuração")
-    chave_crua = st.text_input("Cole sua API Key da OpenAI aqui:", type="password")
-    
-    # Limpa espaços invisíveis que causam erro na chave
-    api_key = chave_crua.strip() if chave_crua else ""
-    
-    st.markdown("---")
-    st.info("💡 Dica: Para vender isso, você esconderia essa chave e cobraria assinatura do cliente.")
+# ================= 🔑 A MÁGICA: PUXANDO A CHAVE DO COFRE INVISÍVEL =================
+try:
+    api_key = st.secrets["OPENAI_API_KEY"]
+except:
+    st.error("🚨 ERRO DO SISTEMA: A chave da OpenAI não foi encontrada no Cofre do Streamlit! Papai, vá nas configurações do site e adicione a chave.")
+    st.stop()
 
 # ================= FORMULÁRIO DO USUÁRIO =================
 with st.form("form_ads"):
@@ -40,20 +76,16 @@ with st.form("form_ads"):
     with col5:
         beneficios = st.text_area("Principais Benefícios (Ouro)", placeholder="Ex: Automático, Risco Baixo, Instalação Fácil...", height=110)
     
-    # Botão de Ação
     submit_btn = st.form_submit_button("🔥 GERAR CAMPANHA COMPLETA AGORA", use_container_width=True)
 
 # ================= A MÁGICA (INTELIGÊNCIA ARTIFICIAL) =================
 if submit_btn:
-    if not api_key:
-        st.error("⚠️ Você precisa colocar a API Key da OpenAI na barra lateral para funcionar!")
-    elif not nome_produto or not beneficios:
+    if not nome_produto or not beneficios:
         st.warning("⚠️ Preencha pelo menos o Nome e os Benefícios!")
     else:
         try:
             client = OpenAI(api_key=api_key)
             
-            # INSTRUÇÕES DE CONTINGÊNCIA
             regra_black = ""
             if "Black" in tipo_nicho:
                 regra_black = """
@@ -65,7 +97,6 @@ if submit_btn:
             else:
                 regra_black = "- Nicho White: Foque nos beneficios diretos e transformacao clara."
 
-            # === O CÉREBRO INTELIGENTE: SEPARA GOOGLE DE FACEBOOK ===
             regras_textos = ""
             estrutura_trafego = ""
             
@@ -80,14 +111,13 @@ if submit_btn:
                 =========================================
                 🎯 2. CONFIGURACAO DA CAMPANHA (O MAPA DA MINA - GOOGLE ADS)
                 =========================================
-                - Objetivo da Campanha: VENDAS (Foque sempre em Vendas/Conversao)
-                - Palavras-chave Positivas: (10 termos quentes para comprar)
-                - Palavras-chave Negativas: (10 termos cruciais para negativar e nao perder dinheiro)
-                - Publico-Alvo Demografico: (Qual a Renda, Idade e Genero ideal?)
-                - Dispositivos: (Focar em Celular, Computador ou ambos?)
+                - Objetivo da Campanha: VENDAS
+                - Palavras-chave Positivas: (10 termos quentes)
+                - Palavras-chave Negativas: (10 termos cruciais)
+                - Publico-Alvo Demografico: (Renda, Idade e Genero)
+                - Dispositivos: (Focar em Celular, Computador ou ambos)
                 - Estrategia de Lance Recomendada: Maximizar Conversoes
                 """
-                
             elif "Facebook" in plataforma:
                 regras_textos = """
                 1. Headline do Anuncio (Titulo Curto).
@@ -106,10 +136,10 @@ if submit_btn:
                 
                 NIVEL 2: CONJUNTO DE ANUNCIOS
                 - Meta de Desempenho: Maximizar numero de conversoes
-                - Pixel / Evento: Selecionar o Pixel -> Evento: Iniciar Finalizacao de Compra (Initiate Checkout)
+                - Pixel / Evento: Iniciar Finalizacao de Compra (Initiate Checkout)
                 - Publico Advantage+: Ativado
                 - Localizacao: Inclusao - Brasil
-                - Segmentacao: (Sugira interesses e exclusoes, ex: excluir compradores 90 dias)
+                - Segmentacao: (Sugira interesses e exclusoes)
                 - Posicionamentos: Advantage+ Ativado
                 
                 NIVEL 3: ANUNCIO
@@ -117,12 +147,10 @@ if submit_btn:
                 - Rastreamento: Eventos do Site Ativados
                 - Parametros de URL (UTM): (Crie o link com utm_source e utm_medium)
                 """
-                
-            else: # TikTok
+            else: 
                 regras_textos = "Ganchos (Hooks) para os 3 primeiros segundos de video e Texto curto para a legenda."
                 estrutura_trafego = "Objetivo (Sempre focado em Conversoes/Vendas), Interesses e Comportamentos ideais no TikTok Ads."
 
-            # O PROMPT DE ENGENHARIA 
             prompt_sistema = f"""
             Voce e um Especialista Senior em Trafego Pago e Copywriting.
             Sua missao e preencher as configuracoes tecnicas e escrever copys matadoras focadas em conversao.
@@ -171,12 +199,11 @@ if submit_btn:
                 
                 resultado = response.choices[0].message.content
                 
-                # Exibição Bonita
                 st.success(f"✅ Guia Completo para {plataforma} Gerado com Sucesso!")
                 st.text_area("Copie sua Estrutura Completa Aqui:", value=resultado, height=650)
                 
         except Exception as e:
-            st.error(f"Erro ao conectar na IA (Verifique sua chave): {e}")
+            st.error(f"Erro na conexão com a IA. Detalhes: {e}")
 
 # ================= RODAPÉ =================
 st.markdown("---")
